@@ -2,7 +2,7 @@ SUMMARY = "Rust standard libaries"
 HOMEPAGE = "http://www.rust-lang.org"
 SECTION = "devel"
 LICENSE = "(MIT | Apache-2.0) & Unicode-TOU"
-LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=c2cccf560306876da3913d79062a54b9"
+LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=9c0fae516fe8aaea2fb601db4800daf7"
 
 require rust-source.inc
 
@@ -24,6 +24,8 @@ DEPENDS:remove:riscv64 = "libunwind"
 
 # Embed bitcode in order to allow compiling both with and without LTO
 RUSTFLAGS += "-Cembed-bitcode=yes"
+# Ensure that user code can't access the dependencies of the standard library
+RUSTFLAGS += "-Zforce-unstable-if-unmarked"
 # Needed so cargo can find libbacktrace
 RUSTFLAGS += "-L ${STAGING_LIBDIR} -C link-arg=-Wl,-soname,libstd.so"
 
@@ -48,8 +50,3 @@ do_install () {
 }
 
 BBCLASSEXTEND = "nativesdk"
-
-# Since 1.70.0 upgrade this fails to build with gold:
-# http://errors.yoctoproject.org/Errors/Details/708194/
-# ld: error: version script assignment of  to symbol __rust_alloc_error_handler_should_panic failed: symbol not defined
-LDFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-gold', ' -fuse-ld=bfd', '', d)}"

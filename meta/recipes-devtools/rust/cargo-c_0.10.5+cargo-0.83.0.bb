@@ -6,12 +6,13 @@ LIC_FILES_CHKSUM = " \
 "
 
 SRC_URI = "crate://crates.io/cargo-c/${PV};name=cargo-c"
-SRC_URI[cargo-c.sha256sum] = "ec77e3635cdb0d211f88f22d0460eef0ba031eb616ded57f2ffb98a90365c445"
+SRC_URI[cargo-c.sha256sum] = "5bfa9ba93806384d940e71dafbc185316e0a6a47561b33b7105fcf67f99df70a"
 S = "${CARGO_VENDORING_DIRECTORY}/cargo-c-${PV}"
 
-inherit cargo cargo-update-recipe-crates pkgconfig native
+inherit cargo cargo-update-recipe-crates pkgconfig
 
 DEPENDS = "openssl curl"
 
 require ${BPN}-crates.inc
 
+BBCLASSEXTEND = "native"
